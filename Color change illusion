@@ -1,0 +1,67 @@
+let numLines = 30;  // 橫線的數量
+let ballsPerLine = 5;  // 每條直線的小球數量
+let ballSize = 15;  // 小球的大小
+let speed = 15 ;  // 小球的移動速度
+let colors = [];  // 用來存儲每條斜線的初始顏色
+let lines = [];  // 用來存儲每條斜直線的小球
+
+function setup() {
+  createCanvas(670, 400);
+  
+  // 初始化每條直線及其小球的位置
+  for (let j = 0; j < numLines; j++) {
+    let line = [];
+    for (let i = 0; i < ballsPerLine; i++) {
+      let x = i * -135 + j * -15  ;  // 每個小球在同一條斜直線上依次向左排列
+      let y = j * 15 ;  // 每條直線的起始位置不同
+      line.push({x: x, y: y});
+    }
+    lines.push(line);  // 將每條直線加入 lines 陣列中
+    // 根據 j 的偶數或奇數來決定初始顏色
+    if (j % 2 === 0) {
+      colors.push(color(255, 0, 0));  // 偶數行：紅色
+    } else {
+      colors.push(color(0, 180, 0));  // 奇數行：綠色，亮度較低的綠色
+    }
+  }
+
+  ballColor = color(255, 0, 0);  // 初始顏色設置為紅色
+}
+
+function draw() {
+  background(0);
+  noStroke();
+  
+  // 每 3 幀切換一次顏色
+  if (frameCount % 2 === 0) {
+    for (let j = 0; j < numLines; j++) {
+      // 如果當前顏色是紅色，切換為綠色；如果是綠色，切換為紅色
+      if (colors[j].levels[0] === 255) {  // 如果當前顏色是紅色
+        colors[j] = color(0, 180, 0);  // 切換為亮度較低的綠色
+      } else {
+        colors[j] = color(255, 0, 0);  // 切換為紅色
+      }
+    }
+  }
+
+  // 更新並繪製每條斜直線上的小球
+  for (let j = 0; j < numLines; j++) {
+    for (let i = 0; i < ballsPerLine; i++) {
+      let ball = lines[j][i];
+
+      // 設定小球顏色
+      fill(colors[j]);
+
+      // 繪製小球
+      ellipse(ball.x, ball.y, ballSize, ballSize);
+
+      // 更新小球位置，使其向右移動
+      ball.x = ball.x + speed;
+
+      // 如果小球超過畫布的右邊，將它重置到左邊
+      if (ball.x > width) {
+        ball.x = -ballSize;  // 將小球重置到畫布左邊外面，讓它重新進入
+      }
+    }
+  }
+}
