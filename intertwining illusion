@@ -1,0 +1,60 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+def create_circle_of_squares(num_squares, radius, ax, offset_angle=0, rotation_increment=0):
+    angles = np.linspace(0, 2 * np.pi, num_squares, endpoint=False)
+    for i in range(num_squares):
+        angle = angles[i] + offset_angle
+        x = radius * np.cos(angle)
+        y = radius * np.sin(angle)
+        square_size = 0.22
+        color = 'black' if i % 2 == 0 else 'white'  # Alternate black and white
+
+        # Calculate rotation angle with increment
+        rotation_angle = i * rotation_increment
+
+        rect = plt.Rectangle((x - square_size / 2, y - square_size / 2), square_size, square_size,
+                             facecolor='gray', angle=rotation_angle, rotation_point='center',  edgecolor=color)
+        ax.add_patch(rect)
+
+# Create a figure and axes
+fig, ax = plt.subplots()
+
+# Set the background color to gray
+fig.patch.set_facecolor('gray') # Set figure background
+ax.set_facecolor('gray') # Set axes background
+
+
+# Increased spacing for the circles
+radii = [1, 1.6, 2.2, 2.8] # Increased spacing here
+
+# Inner circle
+create_circle_of_squares(18, radii[0], ax, offset_angle=np.pi / 10, rotation_increment=20)
+
+# Middle circle
+create_circle_of_squares(30, radii[1], ax, offset_angle=np.pi / -10, rotation_increment=12)
+
+# Outer circle
+create_circle_of_squares(42, radii[2], ax, offset_angle=np.pi / 10, rotation_increment=8.5714)
+
+# Outouter circle
+create_circle_of_squares(56, radii[3], ax, offset_angle=np.pi / -10, rotation_increment=6.43)
+
+# Set the aspect ratio to equal to make the circle look round
+ax.set_aspect('equal')
+
+# Set the axis limits to fit the circles (adjust limits based on new radii)
+ax.set_xlim([-3.1, 3.1])
+ax.set_ylim([-3.1, 3.1])
+
+# Remove the axis ticks and labels
+ax.set_xticks([])
+ax.set_yticks([])
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['left'].set_visible(False)
+
+
+# Display the plot
+plt.show()
